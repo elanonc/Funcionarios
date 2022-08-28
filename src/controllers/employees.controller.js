@@ -6,8 +6,6 @@ const seedData = async () => {
     const { data } = await axios.get(url);
     const cotação = data.USDBRL.bid;
     
-    console.log("Data.USDBRL.bid retorna: " + cotação)
-    
     return cotação;
 };
 
@@ -39,7 +37,7 @@ const getEmployee = async (request, response, next) => {
         convertSalary(result.rows, usd);
         
         if (result.rows.length === 0) {
-            return response.status(400).json({ error: "Employee not found"});
+            return response.status(404).json({ error: "Employee not found"});
         }
         
         return response.json(result.rows[0]);
@@ -69,7 +67,7 @@ const removeEmployee = async (request, response, next) => {
         const result = await pool.query("DELETE FROM employees WHERE id = $1", [id]);
 
         if (result.rowCount === 0) {
-            return response.status(400).json( { error: "Emplyee not found"} );
+            return response.status(404).json( { error: "Emplyee not found"} );
         }
 
         return response.sendStatus(200);
@@ -88,7 +86,7 @@ const updateEmployee = async (request, response, next) => {
             [name, salary, age, role, email, id]);
         
         if (result.rows.length === 0 ) {
-            return response.status(400).json( { error: "Employee not found" } );
+            return response.status(404).json( { error: "Employee not found" } );
         }
 
         return response.status(201).json(result.rows[0]);
